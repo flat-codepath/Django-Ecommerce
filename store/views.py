@@ -1,10 +1,27 @@
 from django.shortcuts import render
-from .models import  Product
+from .models import  Product,Category
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.shortcuts import redirect
 from .forms import  SignUpForm
 # Create your views here.
+
+
+def category(request,foo):
+    #replace hyphens with space
+    foo =foo.replace('-' ,' ')
+    #Grab the category from the url
+    try:
+        #look up the category
+        category =Category.objects.get(name=foo)
+        print(category)
+        products=Product.objects.filter(category=category)
+        print(products)
+        return render(request,'category.html',{'products':products,'category':category})
+
+    except:
+        messages.error( request,"That category Doesn't Exist")
+        return redirect('home')
 
 
 def product(request,pk):
@@ -64,4 +81,3 @@ def register_user(request):
             return redirect('register')
     form=SignUpForm()
     return  render(request,'register.html',{'form':form})
-

@@ -6,8 +6,8 @@
         <header class="bg-dark py-5">
             <div class="container px-4 px-lg-5 my-3">
                 <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Django Ecommerce </h1>
-                    <p class="lead fw-normal text-success-50 mb-0">With this Django Ecommerce for the Best </p>
+                    <h1 class="display-4 fw-bolder">{{ category}}</h1>
+                    <p class="lead fw-normal text-success-50 mb-0">Category Page</p>
                 </div>
             </div>
         </header>
@@ -35,9 +35,9 @@
                                    <!--sale-->
                                     <div class="d-flex  justify-content-center
                                      small text-waring mb-2">
-                                        <div class="bi-star-fill text-warning"></div>
+                                        <div class="bi-star-fill"></div>
                                         &nbsp;&nbsp;Sale!&nbsp;&nbsp;
-                                        <div class="bi-star-fill text-warning"></div>
+                                        <div class="bi-star-fill"></div>
                                     </div>
                                     <!-- Product price-->
                                     <strike>
@@ -81,7 +81,7 @@
                     </div>
                     {% endif %}
                 {% endfor %}
-                    
+
                 </div>
             </div>
         </section>
