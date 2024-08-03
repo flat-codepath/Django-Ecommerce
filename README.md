@@ -1,5 +1,5 @@
 <h3> django Ecommerce page</h3>
-provides hand on experience with django,<br>
+provides hand on experience with django,
 understanding  E-commerce Concepts,
 Data Management,
 session management,
