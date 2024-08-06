@@ -84,13 +84,14 @@
           action:'post'
      },
      success: function(json){
-         div=document.getElementById("cart_quantity"),
-         div.innerText=json.qty
+         document.getElementById("cart_quantity")
+         .innerText=json.qty
      },
      error: function(xhr, errmsg, err){
 
      }
     });
   });
+
 </script>
 {% endblock %}

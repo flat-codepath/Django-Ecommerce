@@ -8,6 +8,7 @@ class Cart():
         # this will throw keyError if 'session_key' not in req.POST
         # so we go for
         cart = self.session.get('session_key')
+        # {'1': 3}
         # if the user is new, no session key create one!
         if 'session_key' not in request.session:
             cart = self.session['session_key'] = {}  # creating new session key assigning value
@@ -32,13 +33,23 @@ class Cart():
     def get_prods(self):
         # Get ids form carts
         product_ids = self.cart.keys()
-
         # use ids to lookup products in database model
         products = Product.objects.filter(id__in=product_ids)
         # Return those looked up products
         return products
 
     def get_quants(self):
-        quantities=self.cart
+        quantities = self.cart
+
         return quantities
-        pass
+
+    def update(self, product, quantity):
+        product_id = str(product)
+        product_qty = int(quantity)
+        # {'4':3 '2':5}
+
+        ourCart = self.cart
+        ourCart[product_id] = product_qty
+        self.session.modified = True
+        thing = self.cart
+        return thing

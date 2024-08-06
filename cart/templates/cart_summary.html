@@ -52,15 +52,13 @@
                <div class="row justify-content-center mt-3 ">
                   <div class="col-md-2 col-xs-3">Quantity</div>
                   <div class="col-md-2">
-             <select class="form-select form-select-sm" id="qty-cart" >
-
+             <select class="form-select form-select-sm" id="select{{product.id}}" >
 <!--                     {'4':3,'3':5,}-->
                      {%  for key,value in quantities.items %}
                         {% if key == product.id|slugify %}
                       <option selected>{{value}} </option>
                      {% endif %}
                      {%  endfor%}
-
                   <option value="1">1</option>
                   <option value="2">2</option>
                   <option value="3">3</option>
@@ -73,11 +71,10 @@
 
         <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
               <a href="{% url 'home' %}" class="btn btn-secondary">Home</a>
-
+              <button type="button"  data-index="{{product.id}}" class="btn btn-secondary update-cart">Update</button>
               </center>
       </div>
     </div>
-
   </div>
 </div>
           <br>
@@ -89,5 +86,34 @@
           <br><br><br><br><br><br><br><br><br><br><br><br>
   {% endif %}
       </div>
+
+
+<script type="text/javascript">
+    $(document).on('click','.update-cart', function(e){
+    e.preventDefault();
+
+    //grab product id
+    var productId = $(this).data('index')
+
+    $.ajax({
+     type:'POST',
+     url:"{% url 'cart_update' %}",
+     data:{
+          product_id:$(this).data('index'),
+          product_qty:$(`#select${productId} option:selected`).text(),
+          csrfmiddlewaretoken:'{{csrf_token }}',
+          action:'post'
+     },
+     success: function(json){
+         //div=document.getElementById("cart_quantity"),
+         //div.innerText=json.qty
+         location.reload();
+     },
+     error: function(xhr, errmsg, err){
+
+     }
+    });
+  });
+</script>
 
      {% endblock %}

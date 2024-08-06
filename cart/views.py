@@ -7,9 +7,10 @@ from django.http import JsonResponse
 # Create your views here.
 def cart_summary(request):
     cart = Cart(request)
-    quantities =cart.get_quants
+    quantities = cart.get_quants  # {'1': 3}
+
     cart_products = cart.get_prods
-    return render(request, 'cart_summary.html', {'cart_products': cart_products,'quantities':quantities})
+    return render(request, 'cart_summary.html', {'cart_products': cart_products, 'quantities': quantities})
 
 
 def cart_add(request):
@@ -19,11 +20,13 @@ def cart_add(request):
     if request.POST.get('action') == 'post':
         # Get stuff
         product_id = int(request.POST.get('product_id'))
-        product_qty=int(request.POST.get('product_qty'))
+        product_qty = int(request.POST.get('product_qty'))
+
         # lookup product in a DB
         product = get_object_or_404(Product, id=product_id)
+
         # save to session
-        cart.add(product=product,quantity=product_qty)
+        cart.add(product=product, quantity=product_qty)
         # Get Cart Quantity
         cart_quantity = cart.__len__()
         response = JsonResponse({'qty': cart_quantity})
@@ -39,4 +42,10 @@ def cart_delete(request):
 
 
 def cart_update(request):
-    pass
+    cart = Cart(request)
+    if request.POST.get('action') == 'post':
+        product_id = int(request.POST.get('product_id'))
+        product_qty = request.POST.get('product_qty')
+        cart.update(product=product_id, quantity=product_qty)
+        response = JsonResponse({'qty': product_qty})
+        return response
