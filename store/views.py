@@ -7,7 +7,9 @@ from .forms import SignUpForm
 
 
 # Create your views here.
-
+def category_summary(request):
+    categories =Category.objects.all()
+    return render(request,'category_summery.html',{"categories":categories})
 
 def category(request, foo):
     # replace hyphens with space
