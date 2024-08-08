@@ -3,13 +3,15 @@ from .models import Product, Category
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.shortcuts import redirect
-from .forms import SignUpForm
+from .forms import SignUpForm, UpdateUserForm
+from django.contrib.auth.models import User
 
 
 # Create your views here.
 def category_summary(request):
-    categories =Category.objects.all()
-    return render(request,'category_summery.html',{"categories":categories})
+    categories = Category.objects.all()
+    return render(request, 'category_summery.html', {"categories": categories})
+
 
 def category(request, foo):
     # replace hyphens with space
@@ -79,3 +81,18 @@ def register_user(request):
             return redirect('register')
     form = SignUpForm()
     return render(request, 'register.html', {'form': form})
+
+
+def update_user(request):
+    if request.user.is_authenticated:
+        # current_user = User.objects.get(id=request.user.id)
+        user_form = UpdateUserForm(request.POST or None, instance=request.user)
+        if user_form.is_valid():
+            user_form.save()
+            login(request, request.user)
+            messages.success(request, 'User Has Been Updated!!')
+            return redirect('home')
+        return render(request, 'update_user.html', {'user_form': user_form})
+    else:
+        messages.success(request, 'You Must Be logged In')
+        return render('home')
