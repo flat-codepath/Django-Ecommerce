@@ -22,12 +22,12 @@
     {% for message in messages %}
        {% if message.error %}
           <div class="alert alert-danger shadow-lg alert-dismissible fade show" role="alert">
-          {{message }}
+          <strong style="font-family:cursive,times of roman">{{message }}</strong>
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
        {% else %}
-            <div class="alert alert-success shadow-lg alert-dismissible fade show" role="alert" style="background:lightgreen">
-            {{message}}
+            <div class="alert alert-success shadow-lg alert-dismissible fade show" role="alert" >
+          <strong>{{message }}</strong>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
        {% endif %}

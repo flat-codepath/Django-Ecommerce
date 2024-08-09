@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from .models import Product, Category
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib import messages
 from django.shortcuts import redirect
-from .forms import SignUpForm, UpdateUserForm
+from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm
 from django.contrib.auth.models import User
 
 
@@ -49,7 +49,7 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            messages.success(request, "you Have Been  Logged In")
+            messages.success(request, "You Have Been Logged In")
             return redirect("home")
         else:
             messages.success(request, "there was an error   please try again")
@@ -96,3 +96,29 @@ def update_user(request):
     else:
         messages.success(request, 'You Must Be logged In')
         return render('home')
+
+
+def update_password(request):
+    if request.user.is_authenticated:
+        current_user = request.user
+        # Did they  fill out the form
+        if request.method == "POST":
+            form = ChangePasswordForm(current_user, request.POST)
+            if form.is_valid():
+                form.save()
+                # when user logged  in successfully by default the user details would be there in
+                # session  but if you are changing the password means  the password change value should be updated through session
+                update_session_auth_hash(request, form.user)
+                messages.success(request, "Your Password has Been Updated Please Login Again")
+                logout(request)
+                return redirect('login')
+            else:
+                for error in list(form.errors.values()):
+                    messages.error(request, error)
+        else:
+            form = ChangePasswordForm(request.user)
+            return render(request, 'update_password.html', {'form': form})
+    else:
+        messages.success(request, 'You Must be logged In')
+        form = ChangePasswordForm(request.user)
+    return render(request, 'update_password.html', {'form': form})
