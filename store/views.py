@@ -1,9 +1,9 @@
 from django.shortcuts import render
-from .models import Product, Category
+from .models import Product, Category, Profile
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib import messages
 from django.shortcuts import redirect
-from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm
+from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm, UserInfoForm
 from django.contrib.auth.models import User
 
 
@@ -60,7 +60,7 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    messages.success(request, "you have been logged out.. thanks for stopping by...")
+    messages.success(request, "You Have Been Logged Out.. thanks for stopping by...")
     return redirect('home')
 
 
@@ -77,7 +77,7 @@ def register_user(request):
             messages.success(request, "You Have Registered Successfully ")
             return redirect('home')
         else:
-            messages.error(request, "Whoops! There Was a problem Registering. Please try again")
+            messages.error(request,form.errors)
             return redirect('register')
     form = SignUpForm()
     return render(request, 'register.html', {'form': form})
@@ -92,6 +92,8 @@ def update_user(request):
             login(request, request.user)
             messages.success(request, 'User Has Been Updated!!')
             return redirect('home')
+        for error in list(user_form.errors.values()):
+            messages.error(request, error)
         return render(request, 'update_user.html', {'user_form': user_form})
     else:
         messages.success(request, 'You Must Be logged In')
@@ -122,3 +124,17 @@ def update_password(request):
         messages.success(request, 'You Must be logged In')
         form = ChangePasswordForm(request.user)
     return render(request, 'update_password.html', {'form': form})
+
+
+def update_info(request):
+    if request.user.is_authenticated:
+        current_user = Profile.objects.get(user__id=request.user.id)
+        form = UserInfoForm(request.POST or None, instance=current_user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your Info Has Been Updated!!')
+            return redirect('home')
+        return render(request, 'update_info.html', {'form': form})
+    else:
+        messages.success(request, 'You Must Be logged In')
+        return render('home')

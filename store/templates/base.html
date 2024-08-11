@@ -20,14 +20,14 @@
       {% include 'nav_bar.html' %}
     {% if messages %}
     {% for message in messages %}
-       {% if message.error %}
+       {% if message.values %}
           <div class="alert alert-danger shadow-lg alert-dismissible fade show" role="alert">
-          <strong style="font-family:cursive,times of roman">{{message }}</strong>
+          <strong class="text-danger">{{message}}</strong>
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
        {% else %}
             <div class="alert alert-success shadow-lg alert-dismissible fade show" role="alert" >
-          <strong>{{message }}</strong>
+          <strong class="text-success">{{message }}</strong>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
        {% endif %}
