@@ -5,6 +5,9 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm, UserInfoForm
 from django.db.models import Q
+import json
+from cart.cart import Cart
+
 
 # Create your views here.
 def category_summary(request):
@@ -48,6 +51,21 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            # Do some shopping cart stuff
+            current_user = Profile.objects.get(user__id=request.user.id)
+            # Get there saved cart from the database
+            saved_cart = current_user.old_cart  # {"4": 2, "5": 2, "1": 2, "8": 2}
+            # convert database  string to python dictionary
+            if saved_cart:
+                # converting to dictionary Using JSON
+                converted_cart = json.loads(saved_cart)  # {'4': 2, '5': 2, '1': 2, '8': 2}
+
+                # add the loaded cart dictionary to our session
+                # Get the cart
+                cart = Cart(request)
+                # let's loop thru the dictionary and add the items  from the database
+                for key,value in converted_cart.items():
+                    cart.db_add(product=key,quantity=value)
             messages.success(request, "You Have Been Logged In")
             return redirect("home")
         else:
@@ -76,7 +94,7 @@ def register_user(request):
             messages.success(request, "You Have Registered Successfully ")
             return redirect('home')
         else:
-            messages.error(request,form.errors)
+            messages.error(request, form.errors)
             return redirect('register')
     form = SignUpForm()
     return render(request, 'register.html', {'form': form})
@@ -140,13 +158,13 @@ def update_info(request):
 
 
 def search(request):
-    if request.method== "POST":
-        searched =request.POST['searched']
+    if request.method == "POST":
+        searched = request.POST['searched']
         # query The Products DB models
-        searched= Product.objects.filter(Q(name__icontains=searched) or Q(description__icontaions=searched))
+        searched = Product.objects.filter(Q(name__icontains=searched) or Q(description__icontaions=searched))
         # Test for null
         if not searched:
-            messages.error(request,'That products in not Exists... please try again')
-        return render(request,'search.html',{'searched':searched})
+            messages.error(request, 'That products in not Exists... please try again')
+        return render(request, 'search.html', {'searched': searched})
     else:
-        return render(request,'search.html',{})
+        return render(request, 'search.html', {})
