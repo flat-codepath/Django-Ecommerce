@@ -34,7 +34,7 @@ class SignUpForm(UserCreationForm):
             'password2'].help_text = '<span class="form-text text-muted"><small>Enter the same password as before, for verification.</small></span>'
 
 
-class UpdateUserForm(SetPasswordForm):
+class UpdateUserForm(UserChangeForm):
     # hide the password stuff
     password = None
     # Get out other fields

@@ -4,8 +4,7 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.contrib import messages
 from django.shortcuts import redirect
 from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm, UserInfoForm
-from django.contrib.auth.models import User
-
+from django.db.models import Q
 
 # Create your views here.
 def category_summary(request):
@@ -138,3 +137,16 @@ def update_info(request):
     else:
         messages.success(request, 'You Must Be logged In')
         return render('home')
+
+
+def search(request):
+    if request.method== "POST":
+        searched =request.POST['searched']
+        # query The Products DB models
+        searched= Product.objects.filter(Q(name__icontains=searched) or Q(description__icontaions=searched))
+        # Test for null
+        if not searched:
+            messages.error(request,'That products in not Exists... please try again')
+        return render(request,'search.html',{'searched':searched})
+    else:
+        return render(request,'search.html',{})
