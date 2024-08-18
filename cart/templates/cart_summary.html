@@ -81,8 +81,10 @@
           <br>
 
           {%endfor %}
+          <div align="right">
           <strong><h4>Total:${{total}}</h4></strong>
-          <br>
+              <a class="btn btn-success mt-2" href="{% url 'checkout' %}">Checkout</a>
+              </div>
           <br>
           <br>
  {% else %}

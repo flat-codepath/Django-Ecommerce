@@ -9,6 +9,8 @@ import json
 from cart.cart import Cart
 from payment.forms import ShippingForm
 from payment.models import ShippingAddress
+from django.shortcuts import  get_object_or_404
+
 
 # Create your views here.
 def category_summary(request):
@@ -148,11 +150,12 @@ def update_info(request):
     if request.user.is_authenticated:
         current_user = Profile.objects.get(user__id=request.user.id)
         # Get current  User's shipping address
-        shipping_user = ShippingAddress.objects.get(id=request.user.id)
+        shipping_user = ShippingAddress.objects.get(user__id=request.user.id)
+        # shipping_user = get_object_or_404(ShippingAddress,id=request.user.id)
         # Get original User  Form
         form = UserInfoForm(request.POST or None, instance=current_user)
         # Get  user's  Shipping Form
-        shipping_form = ShippingForm(request.POST or None, instance=shipping_user)
+        shipping_form = ShippingForm(request.POST or None, instance=shipping_user or None)
         if form.is_valid() or shipping_form.is_valid():
             # save the Original form
             form.save()

@@ -1,0 +1,67 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block content %}
+
+        <!-- Header-->
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-3">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">Checkout</h1>
+                    <p class="lead fw-normal text-success-50 mb-0">Review Your Order...</p>
+                </div>
+            </div>
+        </header>
+       <div class="container">
+           <div class="row">
+               <div class="col-md-6 offset-md-3">
+                   <div class="card m-3 shadow-lg">
+                      <div class="card-header">
+                        Order summery
+                      </div>
+                      <div class="card-body m-1 ">
+                      {% for product in cart_products %}
+                          {{product.name}}
+                          {% if product.is_sale %}
+                             ${{product.sale_price}}
+                          {% else %}
+                             ${{product.price}}
+                          {% endif %}
+                          <br class="mt-3 m-3">
+                          <small class="text-success">Quantity:
+                          {% for key,value in  quantities.items  %}
+                          {% if key == product.id|slugify %}
+                                {{value}}
+                          {% endif %}
+                              {% endfor %}</small>
+                          <br class="mt-3">
+
+                          {% endfor %}
+                          <br>
+
+                          Total: <strong>${{total}}</strong>
+                          <br>
+                          <br>
+                          <a href="{% url 'cart_summary'%}" class="btn btn-outline-success">update Items</a>
+                          <br>
+                      </div>
+                    </div>
+                   <br><br>
+                   <div class="card m-3 shadow-lg">
+                       <div class="card-header">
+                            Shipping
+                       </div>
+                       <div class="card-body">
+                           <form>
+                           {{ shipping_form.as_p}}
+
+                               <a href="#" class="btn btn-outline-secondary">Continue To Billing</a>
+                           </form>
+                       </div>
+                   </div>
+
+               </div>
+           </div>
+       </div>
+
+
+     {% endblock %}
