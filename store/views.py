@@ -155,7 +155,7 @@ def update_info(request):
         # Get original User  Form
         form = UserInfoForm(request.POST or None, instance=current_user)
         # Get  user's  Shipping Form
-        shipping_form = ShippingForm(request.POST or None, instance=shipping_user or None)
+        shipping_form = ShippingForm(request.POST or None, instance=shipping_user)
         if form.is_valid() or shipping_form.is_valid():
             # save the Original form
             form.save()

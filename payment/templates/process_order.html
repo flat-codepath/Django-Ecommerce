@@ -6,8 +6,8 @@
         <header class="bg-dark py-5">
             <div class="container px-4 px-lg-5 my-3">
                 <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Checkout</h1>
-                    <p class="lead fw-normal text-success-50 mb-0">Review Your Order...</p>
+                    <h1 class="display-4 fw-bolder">Process Order...</h1>
+                    <p class="lead fw-normal text-success-50 mb-0">This  is temporary</p>
                 </div>
             </div>
         </header>
@@ -46,21 +46,36 @@
                       </div>
                     </div>
                    <br><br>
-                   <div class="card m-3  shadow-lg">
+                   <div class="card m-3 shadow-lg">
                        <div class="card-header">
-                            Shipping info
+                            Shipping Address
                        </div>
                        <div class="card-body" >
-                           <form method="POST" action="{% url 'billing_info' %}">
+
+                         Name:{{ shipping_info.shipping_full_name}}<br>
+                         Email:{{ shipping_info.shipping_email}}<br>
+                         Address1:{{shipping_info.shipping_address1}}<br>
+                         Address2:{{shipping_info.shipping_address2}}<br>
+                         City:{{shipping_info.shipping_city}}<br>
+                         pinCode:{{shipping_info.shipping_pincode}}<br>
+                         State:{{shipping_info.shipping_state}}<br >
+                       <a href="{% url 'checkout' %}" class="btn btn-outline-success mt-3">Update shipping</a>
+                       </div>
+                   </div>
+                   <br><br>
+                     <div class="card m-3 shadow-lg">
+                       <div class="card-header">
+                           Billing
+                       </div>
+                       <div class="card-body" >
+                           <form method="POST" action="{% url 'process_order' %}">
                                {% csrf_token %}
-                           {{ shipping_form.as_p}}
-                               <button type="submit" class="btn btn-outline-success">Continue Billing</button>
+                               {{billing_form.as_p }}
+                               <button type="submit" class="btn btn-outline-success">pay Now</button>
                            </form>
                        </div>
                    </div>
                </div>
            </div>
        </div>
-
-
-     {% endblock %}
+     {% endblock %
