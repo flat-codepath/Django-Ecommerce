@@ -53,6 +53,13 @@ def Process_order(request):
                         create_order_item = OrderItem(order_id=order_id, product_id=product_id, user=user,
                                                       quantity=value, price=price)
                         create_order_item.save()
+                        print('-------------------------------------------------------------------------------')
+            # Delete our cart
+            print(request.session.keys(),'=====================================')
+            for key in list(request.session.keys()):
+                if key =="session_key":
+                    del request.session[key]
+
             messages.success(request, 'Order Placed')
             return redirect('home')
 
@@ -78,6 +85,11 @@ def Process_order(request):
                         # create_order item
                         create_order_item = OrderItem(order_id=order_id, product_id=product_id, quantity=value, price=price)
                         create_order_item.save()
+            # Delete cart items
+            for key in list(request.session.keys()):
+                if key == "session_key":
+                    del request.session[key]
+
             messages.success(request, 'Order placed')
             return redirect('home')
     else:
@@ -113,10 +125,6 @@ def billing_info(request):
             return render(request, 'billing_info.html',
                           {'cart_products': cart_products, 'quantities': quantities, 'total': total,
                            'shipping_info': request.POST, 'billing_form': billing_form})
-        # billing_form = PaymentForm()
-        # return render(request, 'billing_info.html',
-        #               {'cart_products': cart_products, 'quantities': quantities, 'total': total,
-        #                'shipping_info':request.POST,'billing_form':billing_form})
     else:
         messages.error(request, "Access Denied")
         return redirect('home')
