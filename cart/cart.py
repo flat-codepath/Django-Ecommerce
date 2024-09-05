@@ -60,7 +60,7 @@ class Cart():
 
     def cart_total(self):
         # get product ids
-        products_ids = self.cart.keys()
+        products_ids = self.cart.keys()  # return dict_key in the list form dict_keys(['2', '7'])
         # look those key in our product data base model
         products = Product.objects.filter(id__in=products_ids)
         quantities = self.cart
@@ -99,6 +99,7 @@ class Cart():
         ourCart = self.cart
         ourCart[product_id] = product_qty
         self.session.modified = True
+        self.maintain_state()
         thing = self.cart
         return thing
 

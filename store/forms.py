@@ -61,9 +61,9 @@ class UpdateUserForm(UserChangeForm):
 
 class ChangePasswordForm(SetPasswordForm):
 
-    class Meta:
-        model =User
-        # fields=['new_password','new_password2']
+    # class Meta:
+    #     model =User
+    #     # fields=['new_password','new_password2']
 
     def __init__(self, *args, **kwargs):
         super(ChangePasswordForm, self).__init__(*args, **kwargs)

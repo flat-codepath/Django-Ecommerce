@@ -7,6 +7,24 @@ from store.models import Product
 
 
 # Create your views here.
+def not_shipped_dash(request):
+    if request.user.is_authenticated and request.user.is_superuser:
+        orders=Order.objects.filter(shipped=False)
+        return render(request,'not_shipped_dash.html',{'orders':orders})
+    else:
+        messages.success(request,'Access Denied')
+        return redirect('home')
+
+def shipped_dash(request):
+    if request.user.is_authenticated and request.user.is_superuser:
+        orders = Order.objects.filter(shipped=True)
+
+        return render(request,'shipped_dash.html',{'orders':orders})
+    else:
+        messages.success(request,'Access Denied')
+        return redirect('home')
+
+
 def Process_order(request):
     if request.POST:
         # Get The Cart
@@ -32,7 +50,8 @@ def Process_order(request):
             # logged in
             user = request.user
             # Create Order
-            create_order = Order(user=user, full_name=full_name, email=email, shipping_address=shipping_address,amount_paid=amount_paid)
+            create_order = Order(user=user, full_name=full_name, email=email, shipping_address=shipping_address,
+                                 amount_paid=amount_paid)
             create_order.save()
 
             # Add Order  Items
@@ -55,9 +74,9 @@ def Process_order(request):
                         create_order_item.save()
                         print('-------------------------------------------------------------------------------')
             # Delete our cart
-            print(request.session.keys(),'=====================================')
+            print(request.session.keys(), '=====================================')
             for key in list(request.session.keys()):
-                if key =="session_key":
+                if key == "session_key":
                     del request.session[key]
 
             messages.success(request, 'Order Placed')
@@ -66,7 +85,8 @@ def Process_order(request):
         else:
             #   not loggedIn
             # Create an Order
-            create_order = Order(full_name=full_name, email=email, shipping_address=shipping_address, amount_paid=amount_paid)
+            create_order = Order(full_name=full_name, email=email, shipping_address=shipping_address,
+                                 amount_paid=amount_paid)
             create_order.save()
             # Add Order  Items
             # Get the order ID
@@ -83,13 +103,14 @@ def Process_order(request):
                 for key, value in quantities.items():
                     if int(key) == product.id:
                         # create_order item
-                        create_order_item = OrderItem(order_id=order_id, product_id=product_id, quantity=value, price=price)
+                        create_order_item = OrderItem(order_id=order_id, product_id=product_id, quantity=value,
+                                                      price=price)
                         create_order_item.save()
             # Delete cart items
             for key in list(request.session.keys()):
                 if key == "session_key":
                     del request.session[key]
-
+                    cart.maintain_state()
             messages.success(request, 'Order placed')
             return redirect('home')
     else:
@@ -151,4 +172,3 @@ def checkout(request):
 
 def payment_success(request):
     return render(request, 'payment_success.html', {})
-
