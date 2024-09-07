@@ -7,21 +7,34 @@ from store.models import Product
 
 
 # Create your views here.
+
+def orders(request, pk):
+    if request.user.is_authenticated and request.user.is_superuser:
+        # Get the order
+        order = Order.objects.get(id=pk)
+        print(order,'---------order----------')
+        # Get the Order items
+        items = OrderItem.objects.filter(order=pk)
+        print(items,'-------')
+        return render(request, 'orders.html', {'order': order, 'items': items})
+
+
 def not_shipped_dash(request):
     if request.user.is_authenticated and request.user.is_superuser:
-        orders=Order.objects.filter(shipped=False)
-        return render(request,'not_shipped_dash.html',{'orders':orders})
+        orders = Order.objects.filter(shipped=False)
+        return render(request, 'not_shipped_dash.html', {'orders': orders})
     else:
-        messages.success(request,'Access Denied')
+        messages.success(request, 'Access Denied')
         return redirect('home')
+
 
 def shipped_dash(request):
     if request.user.is_authenticated and request.user.is_superuser:
         orders = Order.objects.filter(shipped=True)
 
-        return render(request,'shipped_dash.html',{'orders':orders})
+        return render(request, 'shipped_dash.html', {'orders': orders})
     else:
-        messages.success(request,'Access Denied')
+        messages.success(request, 'Access Denied')
         return redirect('home')
 
 
