@@ -22,6 +22,7 @@ class Cart():
 
     def maintain_state(self):
         if self.request.user.is_authenticated:
+
             # Get the current user profile
             current_user = Profile.objects.filter(user__id=self.request.user.id)
             # Convert {'3':1, '2':4}
@@ -109,5 +110,5 @@ class Cart():
         if product_id in self.cart:
             del self.cart[product_id]
         self.session.modified = True
-
         self.maintain_state()
+
