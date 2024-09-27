@@ -12,12 +12,12 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
-# from dotenv import load_dotenv---------------
+from dotenv import load_dotenv  #---------------
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # load  our environmental variable
-# load_dotenv()--------------
+load_dotenv()     # --------------
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -29,6 +29,7 @@ SECRET_KEY = 'django-insecure-72rg9=+6!(5jtwt!@=w7$mej5s%_(1-z!$xpxga4z896q*1^th
 DEBUG = True
 
 ALLOWED_HOSTS = []
+CSRF_TRUSTED_ORIGINS=[]
 
 
 # Application definition
@@ -42,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'store',
     'cart',
-    'payment'
+    'payment',
+    'whitenoise.runserver_nostatic',
 ]
 
 MIDDLEWARE = [
@@ -53,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'Ecomm.urls'
@@ -89,8 +92,8 @@ DATABASES = {
         # 'NAME':'railway',
         # 'USER':'postgres',
         # 'PASSWORD':os.environ.get('DB_PASSWORD_YO'),
-        # 'HOST':'viaduct.proxy.rlwy.net',
-        # 'PORT':'23278',
+        # 'HOST':'postgres.railway.internal',
+        # 'PORT':'5432',
 
     }
 }
@@ -134,6 +137,11 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS=[
     'static/'
 ]
+
+# white noise static stuff
+STATICFILES_STORAGE="whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATIC_ROOT=BASE_DIR/'staticfiles'
+
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT= BASE_DIR/'media'
